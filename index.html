@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>영혼식당 운영 스케줄</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#0c1828;--panel2:#111f33;--text:#eaf2ff;--muted:#8fa3bd;
+  --line:rgba(255,255,255,.09);--accent:#72e3c0;--danger:#ff6b81;--today:#ffd166;
+  --pkg:#9f7aea;--solo:#34d399;--pass:#f59e0b;--login:#38bdf8;--etc:#f472b6;
+  --shadow:0 22px 70px rgba(0,0,0,.32);--radius:18px;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Pretendard,"Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% -10%,#14325a 0,transparent 35%),radial-gradient(circle at 90% 10%,#153d35 0,transparent 28%),var(--bg);color:var(--text);min-height:100vh}
+button,input,select{font:inherit}.app{max-width:1680px;margin:auto;padding:28px}.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:20px}.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:800}.hero h1{font-size:clamp(30px,4vw,54px);line-height:1.04;margin:8px 0 9px;letter-spacing:-.045em}.subtitle{color:var(--muted);max-width:820px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:rgba(255,255,255,.055);color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.1)}.btn.primary{background:var(--accent);color:#07111f;border-color:transparent;font-weight:800}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.stat{background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:16px;padding:17px 18px;box-shadow:var(--shadow)}.stat .label{color:var(--muted);font-size:12px}.stat .value{font-size:28px;font-weight:850;margin-top:5px;letter-spacing:-.03em}.stat .hint{font-size:12px;color:var(--muted);margin-top:5px}.toolbar{display:grid;grid-template-columns:1.3fr auto auto auto;gap:10px;background:rgba(11,24,40,.82);border:1px solid var(--line);backdrop-filter:blur(18px);padding:12px;border-radius:16px;position:sticky;top:10px;z-index:20;box-shadow:var(--shadow)}.search{width:100%;background:#081422;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 13px;outline:none}.search:focus{border-color:var(--accent)}.select{background:#081422;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.seg{display:flex;background:#081422;border:1px solid var(--line);border-radius:12px;padding:3px}.seg button{border:0;background:transparent;color:var(--muted);padding:7px 11px;border-radius:9px;cursor:pointer}.seg button.active{background:var(--accent);color:#07111f;font-weight:800}.legend{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:999px;padding:7px 10px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none}.chip.off{opacity:.35}.dot{width:9px;height:9px;border-radius:50%}.panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(13,28,47,.9),rgba(8,19,33,.9));border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}.panel-head h2{font-size:16px;margin:0}.range-label{color:var(--muted);font-size:13px}.timeline-wrap{overflow:auto;max-height:none}.timeline{min-width:1100px;position:relative}.months,.days,.row{display:grid;grid-template-columns:220px repeat(var(--days),minmax(32px,1fr))}.months{position:sticky;top:0;z-index:8;background:#0c1828}.month-name{padding:12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:800;text-align:center}.months .label-space{border-bottom:1px solid var(--line);padding:12px 16px;color:var(--muted);font-size:12px}.days{position:sticky;top:43px;z-index:8;background:#0b1727}.days .name{padding:8px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--muted);font-size:11px}.day{padding:8px 0;text-align:center;border-right:1px solid rgba(255,255,255,.045);border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)}.day.weekend{background:rgba(255,255,255,.025)}.day.today{color:#08111f;background:var(--today);font-weight:900}.group-title{padding:10px 16px;background:rgba(255,255,255,.035);font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--line);position:sticky;left:0;z-index:5}.row{min-height:48px;position:relative}.row-label{position:sticky;left:0;z-index:4;background:#0d1b2d;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 14px;display:flex;flex-direction:column;justify-content:center}.row-label strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-label span{font-size:10px;color:var(--muted);margin-top:2px}.cell{border-right:1px solid rgba(255,255,255,.045);border-bottom:1px solid var(--line)}.cell.weekend{background:rgba(255,255,255,.018)}.bar{position:absolute;left:calc(220px + (var(--start) * ((100% - 220px) / var(--days))));width:calc(var(--span) * ((100% - 220px) / var(--days)));top:7px;height:34px;border-radius:10px;padding:7px 10px;font-size:12px;font-weight:800;white-space:nowrap;overflow:visible;text-overflow:clip;color:#07111f;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer;transition:.2s;z-index:3}.bar:hover{filter:brightness(1.12);transform:translateY(-1px)}.bar.pkg{background:linear-gradient(135deg,#c4b5fd,var(--pkg))}.bar.solo{background:linear-gradient(135deg,#6ee7b7,var(--solo))}.bar.pass{background:linear-gradient(135deg,#fcd34d,var(--pass))}.bar.login{background:linear-gradient(135deg,#7dd3fc,var(--login))}.bar.etc{background:linear-gradient(135deg,#f9a8d4,var(--etc))}.bar.invalid{outline:2px solid var(--danger);outline-offset:2px}.today-line{position:absolute;left:calc(220px + (var(--today-offset) * ((100% - 220px) / var(--days))));top:0;bottom:0;width:2px;background:var(--today);z-index:7;pointer-events:none}.today-line:before{content:"TODAY";position:absolute;top:4px;left:5px;font-size:9px;color:var(--today);font-weight:900}.calendar{display:none;padding:16px;overflow:auto}.calendar-board{min-width:920px}.calendar-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0;overflow:hidden;background:#f8fafc}.weekday{color:var(--muted);font-size:12px;padding:10px 6px;text-align:center;font-weight:800;border-right:1px solid var(--line)}.weekday:last-child{border-right:0}.calendar-week{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-height:var(--week-height);border-left:1px solid var(--line);border-right:1px solid var(--line);border-top:1px solid var(--line);background:#fff}.calendar-week:last-child{border-bottom:1px solid var(--line);border-radius:0 0 14px 14px;overflow:hidden}.cal-day-cell{position:relative;min-height:var(--week-height);border-right:1px solid var(--line);background:#fff;padding:8px}.cal-day-cell:last-of-type{border-right:0}.cal-day-cell.weekend{background:#fafcff}.cal-day-cell.muted{background:#f7f9fb}.cal-day-cell.muted .cal-num{opacity:.45}.cal-num{position:relative;z-index:3;font-size:12px;color:var(--muted);font-weight:700}.cal-num.today{display:inline-flex;width:25px;height:25px;align-items:center;justify-content:center;border-radius:50%;background:var(--today);color:#2c2410;font-weight:900}.cal-event-span{position:absolute;z-index:4;left:calc((var(--col) - 1) * (100% / 7) + 4px);width:calc(var(--span) * (100% / 7) - 8px);top:calc(38px + var(--lane) * 29px);height:24px;border-radius:7px;padding:4px 9px;font-size:11px;line-height:16px;color:#162033;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:clip;cursor:pointer;box-shadow:0 2px 7px rgba(31,41,55,.12);border:1px solid rgba(15,23,42,.08)}.cal-event-span:hover{filter:brightness(.98);transform:translateY(-1px)}.cal-event-span.cont-before{border-top-left-radius:2px;border-bottom-left-radius:2px;margin-left:-4px}.cal-event-span.cont-after{border-top-right-radius:2px;border-bottom-right-radius:2px;width:calc(var(--span) * (100% / 7) - 4px)}.cal-more{position:absolute;left:8px;bottom:7px;font-size:10px;color:var(--muted)}.empty{padding:70px 20px;text-align:center;color:var(--muted)}.modal{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}.modal.open{display:flex}.modal-card{width:min(520px,100%);background:#0d1b2d;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)}.modal-card h3{font-size:22px;margin:0 0 8px}.meta{display:grid;grid-template-columns:100px 1fr;gap:9px;font-size:13px;margin-top:16px}.meta dt{color:var(--muted)}.meta dd{margin:0}.warning{margin-top:14px;border:1px solid rgba(255,107,129,.45);background:rgba(255,107,129,.08);color:#ffb7c2;padding:10px 12px;border-radius:10px;font-size:12px}.footer{color:var(--muted);font-size:11px;text-align:right;margin-top:10px}.toast{position:fixed;right:20px;bottom:20px;padding:11px 14px;background:#10233a;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(12px);transition:.25s;z-index:200}.toast.show{opacity:1;transform:none}
+body.light{--bg:#eef4f8;--panel:#fff;--panel2:#f8fbfd;--text:#122033;--muted:#66778d;--line:rgba(15,23,42,.1);--shadow:0 20px 60px rgba(43,65,90,.14)}body.light .toolbar,body.light .panel,body.light .months,body.light .days{background:rgba(255,255,255,.9)}body.light .search,body.light .select,body.light .seg{background:#f4f7fa;color:var(--text)}body.light .row-label{background:#f8fbfd}body.light .group-title{background:#eef3f7}body.light .modal-card{background:#fff}
+@media(max-width:900px){.app{padding:16px}.hero{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr;position:static}.search{grid-column:1/-1}.cal-day{min-height:90px}.hero-actions{width:100%}.hero-actions .btn{flex:1}}
+
+.row-label.compact{padding:9px 14px}.row-label.compact strong{overflow:visible;text-overflow:clip}.row-label.compact span{white-space:nowrap}
+@media print{body{background:#fff;color:#000}.app{max-width:none;padding:0}.hero-actions,.toolbar,.legend,.footer{display:none}.panel{box-shadow:none;border-color:#bbb}.timeline-wrap{max-height:none;overflow:visible}.timeline{min-width:1200px}.months,.days{position:static}.row-label,.group-title{position:static}.bar{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+
+/* 밝은 운영 화면 및 전체 제목 표시 개선 */
+body.light{
+  --bg:#f6f8fc;--panel:#ffffff;--panel2:#f8fafc;--text:#172033;--muted:#667085;
+  --line:#dfe5ec;--accent:#4f8cff;--danger:#e35d6a;--today:#ffbd3e;
+  --pkg:#c7b5ff;--solo:#75dfbd;--pass:#ffd568;--login:#78d7ff;--etc:#f5a9d1;
+  --shadow:0 12px 34px rgba(35,55,80,.10);
+  background:#f6f8fc;
+}
+body.light .toolbar,body.light .panel,body.light .months,body.light .days{background:#fff}
+body.light .search,body.light .select,body.light .seg{background:#f7f9fc;color:var(--text)}
+body.light .row-label{background:#fff}
+body.light .group-title{background:#f1f4f8;color:#526174}
+body.light .cell.weekend,body.light .day.weekend{background:#f8fafc}
+body.light .cell{border-right-color:#edf0f4}
+body.light .bar{
+  color:#182033;
+  min-width:0;
+  width:calc(var(--span) * ((100% - 220px) / var(--days)));
+  overflow:visible;
+  text-overflow:clip;
+  white-space:nowrap;
+  padding-left:12px;
+  padding-right:12px;
+  border:1px solid rgba(50,60,80,.08);
+  box-shadow:0 5px 14px rgba(41,54,78,.12);
+}
+body.light .bar.pkg{background:#c7b5ff}
+body.light .bar.solo{background:#75dfbd}
+body.light .bar.pass{background:#ffd568}
+body.light .bar.login{background:#78d7ff}
+body.light .bar.etc{background:#f5a9d1}
+body.light .cal-event{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+body.light .modal{background:rgba(25,35,50,.28)}
+body.light .toast{background:#fff;color:var(--text)}
+
+</style>
+</head>
+<body class="light">
+<div class="app">
+  <section class="hero">
+    <div><div class="eyebrow">SOUL RESTAURANT · LIVE OPS</div><h1>영혼식당 운영 스케줄</h1><div class="subtitle">패키지, 이벤트, 시즌 패스를 하나의 타임라인으로 정리했습니다. 검색·필터·월 이동을 지원하며 데이터 이상 항목은 자동 표시됩니다.</div></div>
+    <div class="hero-actions"><button class="btn" id="themeBtn">☾ 어두운 화면</button><button class="btn" id="printBtn">인쇄 / PDF</button><button class="btn primary" id="todayBtn">오늘로 이동</button></div>
+  </section>
+  <section class="stats" id="stats"></section>
+  <section class="toolbar" style="grid-template-columns:1.3fr auto auto auto">
+    <input id="search" class="search" placeholder="이벤트명 검색" />
+    <select id="monthSelect" class="select"></select>
+    <select id="statusSelect" class="select"><option value="all">전체 상태</option><option value="live">진행 중</option><option value="upcoming">예정</option><option value="ended">종료</option><option value="invalid">데이터 확인</option></select>
+    <div class="seg"><button class="active" data-view="timeline">타임라인</button><button data-view="calendar">달력</button></div>
+  </section>
+  <div class="legend" id="legend"></div>
+  <section class="panel">
+    <div class="panel-head"><h2 id="panelTitle">통합 타임라인</h2><div class="range-label" id="rangeLabel"></div></div>
+    <div class="timeline-wrap"><div class="timeline" id="timeline"></div></div>
+    <div class="calendar" id="calendar"></div>
+  </section>
+  <div class="footer">기준일: 2026-07-22 · 원본: 이벤트 스캐쥴.xlsx</div>
+</div>
+<div class="modal" id="modal"><div class="modal-card"><button class="btn" style="float:right" id="closeModal">닫기</button><div id="modalContent"></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const TODAY = new Date('2026-07-22T00:00:00');
+const events = [
+  {name:'초보자 패키지',cat:'기타',start:'2026-07-22',end:'2099-07-28'},
+  {name:'스타터 패키지',cat:'기타',start:'2026-07-22',end:'2099-07-28'},
+  {name:'행운 꾸러미',cat:'패키지',start:'2026-07-22',end:'2026-07-28'},
+  {name:'모여봐요',cat:'패키지',start:'2026-07-28',end:'2026-07-30'},
+  {name:'특별한 선물',cat:'패키지',start:'2026-07-30',end:'2026-08-01'},
+  {name:'달빛 보물 축제',cat:'솔로 이벤트',start:'2026-07-22',end:'2026-07-31'},
+  {name:'달빛 축제 패스',cat:'시즌 패스',start:'2026-07-22',end:'2026-08-11'},
+  {name:'달빛 축제 패스2',cat:'시즌 패스',start:'2026-08-12',end:'2026-08-26'},
+  {name:'달빛 축제 패스3',cat:'시즌 패스',start:'2026-08-27',end:'2026-09-10'},
+  {name:'달빛 축제 패스4',cat:'시즌 패스',start:'2026-09-11',end:'2026-09-25'},
+  ...Array.from({length:14},(_,i)=>{const n=i+1; const base=[['행운 꾸러미','2026-07-22','2026-07-28'],['모여봐요','2026-07-28','2026-07-30'],['특별한 선물','2026-07-30','2026-08-01']]; return null}).filter(Boolean),
+];
+const packageRows = [
+['행운 꾸러미','2026-07-22','2026-07-28'],['모여봐요','2026-07-28','2026-07-30'],['특별한 선물','2026-07-30','2026-08-01'],
+['행운 꾸러미2','2026-08-01','2026-08-03'],['모여봐요2','2026-08-03','2026-08-05'],['특별한 선물2','2026-08-05','2026-08-07'],
+['행운 꾸러미3','2026-08-07','2026-08-09'],['모여봐요3','2026-08-09','2026-08-11'],['특별한 선물3','2026-08-11','2026-08-13'],
+['행운 꾸러미4','2026-08-13','2026-08-15'],['모여봐요4','2026-08-15','2026-08-17'],['특별한 선물4','2026-08-17','2026-08-19'],
+['행운 꾸러미5','2026-08-19','2026-08-21'],['모여봐요5','2026-08-21','2026-08-23'],['특별한 선물5','2026-08-23','2026-08-25'],
+['행운 꾸러미6','2026-08-25','2026-08-27'],['모여봐요6','2026-08-27','2026-08-29'],['특별한 선물6','2026-08-29','2026-08-31'],
+['행운 꾸러미7','2026-08-31','2026-09-02'],['모여봐요7','2026-09-02','2026-09-04'],['특별한 선물7','2026-09-04','2026-09-06'],
+['행운 꾸러미8','2026-09-06','2026-09-08'],['모여봐요8','2026-09-08','2026-09-10'],['특별한 선물8','2026-09-10','2026-09-12'],
+['행운 꾸러미9','2026-09-12','2026-09-14'],['모여봐요9','2026-09-14','2026-09-16'],['특별한 선물9','2026-09-16','2026-09-18'],
+['행운 꾸러미10','2026-09-18','2026-09-20'],['모여봐요10','2026-09-20','2026-09-22'],['특별한 선물10','2026-09-22','2026-09-24'],
+['행운 꾸러미11','2026-09-24','2026-09-26'],['모여봐요11','2026-09-26','2026-09-28'],['특별한 선물11','2026-09-28','2026-09-30'],
+['행운 꾸러미12','2026-09-30','2026-10-02'],['모여봐요12','2026-10-02','2026-10-04'],['특별한 선물12','2026-10-04','2026-10-06'],
+['행운 꾸러미13','2026-10-06','2026-10-08'],['모여봐요13','2026-10-08','2026-10-10'],['특별한 선물13','2026-10-10','2026-10-12'],
+['행운 꾸러미14','2026-10-12','2026-10-14'],['모여봐요14','2026-10-14','2026-10-16'],['특별한 선물14','2026-10-16','2026-10-18']
+];
+packageRows.slice(3).forEach(x=>events.push({name:x[0],cat:'패키지',start:x[1],end:x[2]}));
+const soloRows=[['달빛 보물 축제2','2026-08-01','2026-08-04'],['달빛 보물 축제3','2026-08-05','2026-08-08'],['달빛 보물 축제4','2026-08-09','2026-08-12'],['달빛 보물 축제5','2026-08-13','2026-08-16'],['달빛 보물 축제6','2026-08-17','2026-08-20'],['달빛 보물 축제7','2026-08-21','2026-08-24'],['달빛 보물 축제8','2026-08-25','2026-08-28'],['달빛 보물 축제9','2026-08-29','2026-09-01'],['달빛 보물 축제10','2026-09-02','2026-09-05'],['달빛 보물 축제11','2026-09-06','2026-09-09'],['달빛 보물 축제12','2026-09-10','2026-09-13']];
+soloRows.forEach(x=>events.push({name:x[0],cat:'솔로 이벤트',start:x[1],end:x[2]}));
+const loginRows=[['깜짝 보상!','2026-07-24','2026-07-24'],['깜짝 보상!2','2026-07-27','2026-07-27'],['깜짝 보상!3','2026-07-31','2026-07-31'],['깜짝 보상!4','2026-08-03','2026-08-03'],['깜짝 보상!5','2026-08-07','2026-08-07'],['깜짝 보상!6','2026-08-10','2026-08-10'],['깜짝 보상!7','2026-08-14','2026-08-14'],['깜짝 보상!8','2026-08-17','2026-08-17'],['깜짝 보상!9','2026-08-21','2026-08-21'],['깜짝 보상!10','2026-08-28','2026-08-28'],['깜짝 보상!11','2026-08-31','2026-08-31'],['깜짝 보상!12','2026-09-04','2026-09-04'],['깜짝 보상!13','2026-09-07','2026-09-07'],['깜짝 보상!14','2026-09-11','2026-09-11']];
+loginRows.forEach(x=>events.push({name:x[0],cat:'접속 이벤트',start:x[1],end:x[2]}));
+const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'기타':{cls:'etc',color:'var(--etc)'}};
+const activeCats=new Set(Object.keys(catMap));
+const parse=s=>new Date(s+'T00:00:00');
+const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/86400000);
+const status=e=>{if(parse(e.end)<parse(e.start))return'invalid';if(TODAY<parse(e.start))return'upcoming';if(TODAY>parse(e.end))return'ended';return'live'};
+let currentMonth='2026-07', currentView='timeline';
+const months=(()=>{const out=[];for(let m=1;m<=12;m++)out.push(`2026-${String(m).padStart(2,'0')}`);return out})();
+monthSelect.innerHTML=months.map(m=>`<option value="${m}">${m.replace('-','년 ')}월</option>`).join('');
+monthSelect.value=currentMonth;
+legend.innerHTML=Object.entries(catMap).map(([k,v])=>`<div class="chip" data-cat="${k}"><span class="dot" style="background:${v.color}"></span>${k}</div>`).join('');
+function getFiltered(){const q=search.value.trim().toLowerCase(),st=statusSelect.value;return events.filter(e=>activeCats.has(e.cat)&&(!q||e.name.toLowerCase().includes(q))&&(st==='all'||status(e)===st));}
+function monthBounds(){const [y,m]=currentMonth.split('-').map(Number);return [new Date(y,m-1,1),new Date(y,m,0)]}
+function renderStats(){const visible=getFiltered(),live=events.filter(e=>status(e)==='live').length,up=events.filter(e=>status(e)==='upcoming').length,bad=events.filter(e=>status(e)==='invalid').length;stats.innerHTML=[['전체 일정',events.length,'엑셀 데이터 기준'],['진행 중',live,fmt(TODAY)+' 기준'],['예정 일정',up,'앞으로 시작'],['데이터 확인',bad,bad?'종료일 역전 항목':'이상 없음']].map(x=>`<div class="stat"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><div class="hint">${x[2]}</div></div>`).join('')}
+function renderTimeline(){
+  const finite=events.filter(e=>e.end<'2099'&&status(e)!=='invalid');
+  const start=new Date('2026-07-20');
+  const end=new Date('2026-12-31');
+  const days=Math.round((end-start)/86400000)+1;
+  timeline.style.setProperty('--days',days);
+  timeline.style.minWidth=`${220+days*38}px`;
+
+  const monthSpans=[];let cursor=new Date(start);
+  while(cursor<=end){
+    const y=cursor.getFullYear(),m=cursor.getMonth();let count=0;
+    while(cursor<=end&&cursor.getFullYear()===y&&cursor.getMonth()===m){count++;cursor.setDate(cursor.getDate()+1)}
+    monthSpans.push({label:`${y}년 ${m+1}월`,count});
+  }
+
+  let html=`<div class="months"><div class="label-space">일정 / 카테고리</div>${monthSpans.map(x=>`<div class="month-name" style="grid-column:span ${x.count}">${x.label}</div>`).join('')}</div><div class="days"><div class="name">전체 운영 기간</div>`;
+  for(let i=0;i<days;i++){
+    const d=new Date(start);d.setDate(d.getDate()+i);
+    html+=`<div class="day ${[0,6].includes(d.getDay())?'weekend':''} ${fmt(d)===fmt(TODAY)?'today':''}">${d.getDate()}</div>`;
+  }
+  html+='</div>';
+
+  const filtered=getFiltered();
+  for(const cat of Object.keys(catMap)){
+    const catEvents=filtered
+      .filter(e=>e.cat===cat&&parse(e.start)<=end&&parse(e.end)>=start)
+      .sort((a,b)=>parse(a.start)-parse(b.start)||parse(a.end)-parse(b.end));
+    if(!catEvents.length)continue;
+
+    // 종료일도 하루 전체 운영으로 포함하므로, 다음 일정 시작일이 이전 종료일보다
+    // 늦을 때만 같은 행에 배치한다. 같은 날짜 경계는 실제로 하루가 겹친다.
+    const lanes=[];
+    catEvents.forEach(e=>{
+      const es=parse(e.start), ee=status(e)==='invalid'?es:parse(e.end);
+      let laneIndex=lanes.findIndex(lane=>es>lane.end);
+      if(laneIndex<0){laneIndex=lanes.length;lanes.push({end:ee,items:[]});}
+      lanes[laneIndex].items.push(e);
+      if(ee>lanes[laneIndex].end)lanes[laneIndex].end=ee;
+    });
+
+    html+=`<div class="group-title">${cat} · ${catEvents.length}개 일정 · ${lanes.length}개 행</div>`;
+    lanes.forEach((lane,laneIndex)=>{
+      html+=`<div class="row"><div class="row-label compact"><strong>${cat}${lanes.length>1?` ${laneIndex+1}`:''}</strong><span>${lane.items.length}개 일정</span></div>`;
+      for(let i=0;i<days;i++){
+        const d=new Date(start);d.setDate(d.getDate()+i);
+        html+=`<div class="cell ${[0,6].includes(d.getDay())?'weekend':''}"></div>`;
+      }
+      lane.items.forEach(e=>{
+        const invalid=status(e)==='invalid';
+        const visualEnd=invalid?parse(e.start):parse(e.end);
+        const clampedStart=new Date(Math.max(parse(e.start),start));
+        const clampedEnd=new Date(Math.min(visualEnd,end));
+        const offset=Math.max(0,Math.round((clampedStart-start)/86400000));
+        // 시작일과 종료일을 모두 포함: 7/22~7/28은 7일 칸 전체를 사용한다.
+        const span=Math.max(1,Math.round((clampedEnd-clampedStart)/86400000)+1);
+        html+=`<div class="bar ${catMap[e.cat].cls} ${invalid?'invalid':''}" style="--start:${offset};--span:${span}" data-name="${e.name}" title="${e.name} · ${e.start} ~ ${e.end}">${e.name}</div>`;
+      });
+      html+='</div>';
+    });
+  }
+
+  const todayOffset=Math.round((TODAY-start)/86400000);
+  if(todayOffset>=0&&todayOffset<days)html+=`<div class="today-line" style="--today-offset:${todayOffset}"></div>`;
+  timeline.innerHTML=html;
+  timeline.style.display='block';calendar.style.display='none';
+  rangeLabel.textContent=`전체 기간 · ${fmt(start)} ~ ${fmt(end)} · 종료일 포함`;
+  bindEvents();
+}
+function renderCalendar(){
+  const [first,last]=monthBounds();
+  const gridStart=new Date(first);gridStart.setDate(1-first.getDay());
+  const gridEnd=new Date(last);gridEnd.setDate(last.getDate()+(6-last.getDay()));
+  const filtered=getFiltered().filter(e=>status(e)!=='invalid');
+  let html='<div class="calendar-board"><div class="calendar-weekdays">'+['일','월','화','수','목','금','토'].map(d=>`<div class="weekday">${d}</div>`).join('')+'</div>';
+  for(let weekStart=new Date(gridStart);weekStart<=gridEnd;weekStart.setDate(weekStart.getDate()+7)){
+    const weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);
+    const segments=[];
+    filtered.forEach(e=>{
+      const es=parse(e.start),ee=parse(e.end);
+      if(es>weekEnd||ee<weekStart)return;
+      const segStart=new Date(Math.max(es,weekStart));const segEnd=new Date(Math.min(ee,weekEnd));
+      segments.push({e,startCol:segStart.getDay()+1,span:Math.round((segEnd-segStart)/86400000)+1,contBefore:es<weekStart,contAfter:ee>weekEnd,start:segStart,end:segEnd});
+    });
+    segments.sort((a,b)=>a.startCol-b.startCol||b.span-a.span||a.e.name.localeCompare(b.e.name));
+    const laneEnds=[];
+    segments.forEach(seg=>{let lane=laneEnds.findIndex(endCol=>seg.startCol>endCol);if(lane<0){lane=laneEnds.length;laneEnds.push(0)}seg.lane=lane;laneEnds[lane]=seg.startCol+seg.span-1});
+    const weekHeight=Math.max(126,52+laneEnds.length*29);
+    html+=`<div class="calendar-week" style="--week-height:${weekHeight}px">`;
+    for(let i=0;i<7;i++){
+      const d=new Date(weekStart);d.setDate(d.getDate()+i);const ds=fmt(d);
+      html+=`<div class="cal-day-cell ${[0,6].includes(d.getDay())?'weekend':''} ${d.getMonth()!==first.getMonth()?'muted':''}"><div class="cal-num ${ds===fmt(TODAY)?'today':''}">${d.getDate()}</div></div>`;
+    }
+    segments.forEach(seg=>{
+      const cls=catMap[seg.e.cat].cls;
+      html+=`<div class="cal-event-span ${cls} ${seg.contBefore?'cont-before':''} ${seg.contAfter?'cont-after':''}" style="--col:${seg.startCol};--span:${seg.span};--lane:${seg.lane};background:${catMap[seg.e.cat].color}" data-name="${seg.e.name}" title="${seg.e.name} · ${seg.e.start} ~ ${seg.e.end}">${seg.e.name}</div>`;
+    });
+    html+='</div>';
+  }
+  html+='</div>';
+  calendar.innerHTML=html;timeline.style.display='none';calendar.style.display='block';rangeLabel.textContent=`${first.getFullYear()}년 ${first.getMonth()+1}월 · 연속 일정 표시`;bindEvents();
+}
+function render(){renderStats();currentView==='timeline'?renderTimeline():renderCalendar()}
+function bindEvents(){document.querySelectorAll('[data-name]').forEach(el=>el.onclick=()=>openModal(events.find(e=>e.name===el.dataset.name)))}
+function openModal(e){const st=status(e),labels={live:'진행 중',upcoming:'예정',ended:'종료',invalid:'데이터 확인'};modalContent.innerHTML=`<div class="eyebrow">${e.cat}</div><h3>${e.name}</h3><span class="chip"><span class="dot" style="background:${catMap[e.cat].color}"></span>${labels[st]}</span><dl class="meta"><dt>시작일</dt><dd>${e.start}</dd><dt>종료일</dt><dd>${e.end==='2099-07-28'?'상시 운영 (원본 2099-07-28)':e.end}</dd><dt>기간</dt><dd>${st==='invalid'?'확인 필요':e.end==='2099-07-28'?'상시':Math.max(1,diff(e.start,e.end)+1)+'일'}</dd></dl>${st==='invalid'?'<div class="warning">종료일이 시작일보다 빠릅니다. 엑셀 원본의 날짜를 확인해 주세요.</div>':''}`;modal.classList.add('open')}
+function toastMsg(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1700)}
+search.oninput=render;statusSelect.onchange=render;monthSelect.onchange=e=>{currentMonth=e.target.value;render()};legend.onclick=e=>{const chip=e.target.closest('.chip');if(!chip)return;const c=chip.dataset.cat;activeCats.has(c)?activeCats.delete(c):activeCats.add(c);chip.classList.toggle('off');render()};document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentView=b.dataset.view;panelTitle.textContent=currentView==='timeline'?'통합 타임라인':'월간 캘린더';render()});todayBtn.onclick=()=>{currentMonth='2026-07';monthSelect.value=currentMonth;if(currentView==='calendar'){render();}else{render();setTimeout(()=>{const todayEl=document.querySelector('.day.today');if(todayEl)todayEl.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},100);}toastMsg('오늘(2026-07-22)로 이동했습니다')};printBtn.onclick=()=>window.print();themeBtn.onclick=()=>{document.body.classList.toggle('light');themeBtn.textContent=document.body.classList.contains('light')?'☾ 어두운 화면':'☀︎ 밝은 화면'};closeModal.onclick=()=>modal.classList.remove('open');modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open')};document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});render();
+</script>
+</body>
+</html>
