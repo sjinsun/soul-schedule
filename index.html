@@ -57,6 +57,7 @@ body.light .cal-event{white-space:normal;overflow:visible;text-overflow:clip;lin
 body.light .modal{background:rgba(25,35,50,.28)}
 body.light .toast{background:#fff;color:var(--text)}
 
+.dragging{cursor:grabbing!important;user-select:none}.timeline-wrap{cursor:grab}
 </style>
 </head>
 <body class="light">
@@ -158,6 +159,8 @@ const events = [
   {name:'등나무 꾸러미1',cat:'패키지',start:'2026-09-14',end:'2026-09-16'},
   {name:'등나무 선물1',cat:'패키지',start:'2026-09-17',end:'2026-09-18'},
   {name:'등나무 꾸러미2',cat:'패키지',start:'2026-09-22',end:'2026-09-24'},
+  {name:'등나무 선물2',cat:'패키지',start:'2026-09-28',end:'2026-09-29'},
+  {name:'등나무 꾸러미3',cat:'패키지',start:'2026-09-30',end:'2026-10-02'},
   // 솔로 이벤트
   {name:'달빛 보물 축제',cat:'솔로 이벤트',start:'2026-07-22',end:'2026-07-31'},
   {name:'달빛 보물 축제2',cat:'솔로 이벤트',start:'2026-08-01',end:'2026-08-04'},
@@ -180,7 +183,8 @@ const events = [
   {name:'추억의 물건4',cat:'솔로 이벤트',start:'2026-09-22',end:'2026-09-24'},
   {name:'요괴 대행진4',cat:'솔로 이벤트',start:'2026-09-25',end:'2026-09-27'},
   {name:'달빛 보물 축제5',cat:'솔로 이벤트',start:'2026-09-28',end:'2026-09-30'},
-  // 경쟁 이벤트 (한밤 콘서트 + 연날리기)
+  {name:'반딧불5',cat:'솔로 이벤트',start:'2026-10-01',end:'2026-10-03'},
+  // 경쟁 이벤트
   {name:'한밤 콘서트1',cat:'경쟁 이벤트',start:'2026-08-22',end:'2026-08-25'},
   {name:'한밤 콘서트2',cat:'경쟁 이벤트',start:'2026-08-28',end:'2026-08-30'},
   {name:'한밤 콘서트3',cat:'경쟁 이벤트',start:'2026-09-05',end:'2026-09-07'},
@@ -191,6 +195,8 @@ const events = [
   // 미니 게임
   {name:'주사위이벤트1',cat:'미니 게임',start:'2026-09-14',end:'2026-09-18'},
   {name:'주사위이벤트2',cat:'미니 게임',start:'2026-09-22',end:'2026-09-24'},
+  {name:'주사위이벤트3',cat:'미니 게임',start:'2026-09-28',end:'2026-10-02'},
+  // 시즌 패스
   {name:'달빛 축제 패스',cat:'시즌 패스',start:'2026-07-22',end:'2026-08-11'},
   {name:'달빛 축제 패스2',cat:'시즌 패스',start:'2026-08-12',end:'2026-08-26'},
   {name:'도깨비 패스',cat:'시즌 패스',start:'2026-08-27',end:'2026-09-10'},
@@ -415,5 +421,32 @@ search.oninput=render;statusSelect.onchange=render;monthSelect.onchange=e=>{curr
     });
 })();
 </script>
+<script>
+// 드래그 스크롤
+(function(){
+  function addDragScroll(el){
+    if(!el) return;
+    let isDown=false, startX, scrollLeft;
+    el.addEventListener('mousedown',e=>{
+      isDown=true; el.classList.add('dragging');
+      startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft;
+    });
+    el.addEventListener('mouseleave',()=>{ isDown=false; el.classList.remove('dragging'); });
+    el.addEventListener('mouseup',()=>{ isDown=false; el.classList.remove('dragging'); });
+    el.addEventListener('mousemove',e=>{
+      if(!isDown) return; e.preventDefault();
+      const x=e.pageX-el.offsetLeft;
+      el.scrollLeft=scrollLeft-(x-startX)*1.2;
+    });
+  }
+  // 타임라인 스크롤 영역 감지 (렌더 후)
+  const observer=new MutationObserver(()=>{
+    const wrap=document.querySelector('.timeline-wrap');
+    if(wrap && !wrap.dataset.drag){ wrap.dataset.drag='1'; addDragScroll(wrap); }
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
