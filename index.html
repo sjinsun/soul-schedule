@@ -180,20 +180,19 @@ const events = [
   {name:'추억의 물건4',cat:'솔로 이벤트',start:'2026-09-22',end:'2026-09-24'},
   {name:'요괴 대행진4',cat:'솔로 이벤트',start:'2026-09-25',end:'2026-09-27'},
   {name:'달빛 보물 축제5',cat:'솔로 이벤트',start:'2026-09-28',end:'2026-09-30'},
-  // 한밤 콘서트
-  {name:'한밤 콘서트1',cat:'한밤 콘서트',start:'2026-08-22',end:'2026-08-25'},
-  {name:'한밤 콘서트2',cat:'한밤 콘서트',start:'2026-08-28',end:'2026-08-30'},
-  {name:'한밤 콘서트3',cat:'한밤 콘서트',start:'2026-09-05',end:'2026-09-07'},
-  {name:'한밤 콘서트4',cat:'한밤 콘서트',start:'2026-09-11',end:'2026-09-13'},
-  {name:'한밤 콘서트5',cat:'한밤 콘서트',start:'2026-09-25',end:'2026-09-27'},
-  {name:'한밤 콘서트6',cat:'한밤 콘서트',start:'2026-10-03',end:'2026-10-05'},
-  // 시즌 패스
+  // 경쟁 이벤트 (한밤 콘서트 + 연날리기)
+  {name:'한밤 콘서트1',cat:'경쟁 이벤트',start:'2026-08-22',end:'2026-08-25'},
+  {name:'한밤 콘서트2',cat:'경쟁 이벤트',start:'2026-08-28',end:'2026-08-30'},
+  {name:'한밤 콘서트3',cat:'경쟁 이벤트',start:'2026-09-05',end:'2026-09-07'},
+  {name:'연날리기1',cat:'경쟁 이벤트',start:'2026-09-11',end:'2026-09-13'},
+  {name:'한밤 콘서트4',cat:'경쟁 이벤트',start:'2026-09-19',end:'2026-09-21'},
+  {name:'연날리기2',cat:'경쟁 이벤트',start:'2026-09-25',end:'2026-09-27'},
+  {name:'한밤 콘서트5',cat:'경쟁 이벤트',start:'2026-10-03',end:'2026-10-05'},
   {name:'달빛 축제 패스',cat:'시즌 패스',start:'2026-07-22',end:'2026-08-11'},
   {name:'달빛 축제 패스2',cat:'시즌 패스',start:'2026-08-12',end:'2026-08-26'},
   {name:'도깨비 패스',cat:'시즌 패스',start:'2026-08-27',end:'2026-09-10'},
   {name:'미식회 패스',cat:'시즌 패스',start:'2026-09-11',end:'2026-09-25'},
   {name:'달빛 축제 패스3',cat:'시즌 패스',start:'2026-09-26',end:'2026-10-10'},
-  {name:'연날리기1',cat:'시즌 패스',start:'2026-09-11',end:'2026-09-13'},
   // 접속 이벤트
   {name:'깜짝 보상!',cat:'접속 이벤트',start:'2026-07-27',end:'2026-07-27'},
   {name:'깜짝 보상!2',cat:'접속 이벤트',start:'2026-07-28',end:'2026-07-28'},
@@ -259,7 +258,7 @@ const events = [
   {name:'특별 보상!7',cat:'특별 보상',start:'2026-09-19',end:'2026-09-19'},
   {name:'특별 보상!8',cat:'특별 보상',start:'2026-09-20',end:'2026-09-20'},
 ];
-const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'한밤 콘서트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
+const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
 const activeCats=new Set(Object.keys(catMap));
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
