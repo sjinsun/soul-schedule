@@ -329,22 +329,23 @@ const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2
 const activeCats=new Set([...Object.keys(catMap),...events.map(e=>e.cat)]);
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-// footer 기준일을 오늘 날짜로 표시
-(()=>{ const el=document.getElementById('footerRef'); if(el) el.textContent=`기준일: ${fmt(TODAY)} · 원본: 이벤트 스캐쥴.xlsx`; })();
-
-// GitHub 마지막 업로드 시간 표시
-fetch('https://api.github.com/repos/sjinsun/soul-schedule/commits?path=%EC%9D%B4%EB%B2%A4%ED%8A%B8_%EC%8A%A4%EC%BA%90%EC%A5%B4.xlsx&per_page=1')
-  .then(r=>r.json())
-  .then(data=>{
-    if(data&&data[0]){
-      const dt=new Date(data[0].commit.committer.date);
-      const kst=new Date(dt.getTime()+9*60*60*1000);
-      const str=`${kst.getFullYear()}.${String(kst.getMonth()+1).padStart(2,'0')}.${String(kst.getDate()).padStart(2,'0')} ${String(kst.getHours()).padStart(2,'0')}:${String(kst.getMinutes()).padStart(2,'0')}`;
-      const el=document.getElementById('footerRef');
-      if(el) el.textContent=el.textContent+` · 마지막 업로드: ${str} (KST)`;
-    }
-  })
-  .catch(()=>{});
+// footer 기준일 + GitHub 업로드 시간 표시
+(function(){
+  const el = document.getElementById('footerRef');
+  if(el) el.textContent = `기준일: ${fmt(TODAY)} · 원본: 이벤트 스캐쥴.xlsx`;
+  fetch('https://api.github.com/repos/sjinsun/soul-schedule/commits?path=index.html&per_page=1')
+    .then(r => r.json())
+    .then(data => {
+      if(data && data[0] && data[0].commit){
+        const dt = new Date(data[0].commit.committer.date);
+        const kst = new Date(dt.getTime() + 9*60*60*1000);
+        const str = `${kst.getFullYear()}.${String(kst.getMonth()+1).padStart(2,'0')}.${String(kst.getDate()).padStart(2,'0')} ${String(kst.getHours()).padStart(2,'0')}:${String(kst.getMinutes()).padStart(2,'0')}`;
+        const el2 = document.getElementById('footerRef');
+        if(el2) el2.textContent += ` · 업데이트: ${str} (KST)`;
+      }
+    })
+    .catch(()=>{});
+})();
 const diff=(a,b)=>Math.round((parse(b)-parse(a))/86400000);
 const status=e=>{if(parse(e.end)<parse(e.start))return'invalid';if(TODAY<parse(e.start))return'upcoming';if(TODAY>parse(e.end))return'ended';return'live'};
 let currentMonth='2026-07', currentView='timeline';
