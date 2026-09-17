@@ -303,6 +303,7 @@ function parseXlsxToEvents(wb){
 
 // 페이지 로드 시 같은 저장소 엑셀 자동 fetch
 window.addEventListener('DOMContentLoaded',()=>{
+  render(); // 먼저 하드코딩 데이터로 즉시 렌더
   fetch('./이벤트_스캐쥴.xlsx')
     .then(r=>{if(!r.ok)throw new Error('없음');return r.arrayBuffer();})
     .then(buf=>{
@@ -310,8 +311,9 @@ window.addEventListener('DOMContentLoaded',()=>{
       const parsed=parseXlsxToEvents(wb);
       if(parsed){events.length=0;parsed.forEach(ev=>events.push(ev));render();toastMsg(`✅ 최신 엑셀 자동 로드 — ${parsed.length}개`);}
     })
-    .catch(()=>{/* 파일 없으면 하드코딩 fallback */});
-});{'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
+    .catch(()=>{ /* 파일 없으면 하드코딩 fallback — 이미 render됨 */ });
+});
+const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
 const activeCats=new Set(Object.keys(catMap));
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -433,7 +435,7 @@ function bindEvents(){document.querySelectorAll('[data-name]').forEach(el=>el.on
 function openModal(e){const st=status(e),labels={live:'진행 중',upcoming:'예정',ended:'종료',invalid:'데이터 확인'};modalContent.innerHTML=`<div class="eyebrow">${e.cat}</div><h3>${e.name}</h3><span class="chip"><span class="dot" style="background:${catMap[e.cat].color}"></span>${labels[st]}</span><dl class="meta"><dt>시작일</dt><dd>${e.start}</dd><dt>종료일</dt><dd>${e.end==='2099-07-28'?'상시 운영 (원본 2099-07-28)':e.end}</dd><dt>기간</dt><dd>${st==='invalid'?'확인 필요':e.end==='2099-07-28'?'상시':Math.max(1,diff(e.start,e.end)+1)+'일'}</dd>${e.cat==='접속 이벤트'?'<dt>오픈 시각</dt><dd>13시부터 시작</dd>':''}</dl>${e.cat==='접속 이벤트'?'<div class="warning" style="border-color:rgba(125,211,252,.45);background:rgba(125,211,252,.08);color:#bfe3ff;">⏰ 접속 이벤트는 당일 <b>13시부터</b> 시작합니다.</div>':''}${st==='invalid'?'<div class="warning">종료일이 시작일보다 빠릅니다. 엑셀 원본의 날짜를 확인해 주세요.</div>':''}`;modal.classList.add('open')}
 function toastMsg(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1700)}
 function scrollToToday(){const wrap=document.querySelector('.timeline-wrap');const todayEl=document.querySelector('.day.today');if(wrap&&todayEl){const todayLeft=todayEl.offsetLeft;const center=todayLeft-wrap.clientWidth/2+todayEl.offsetWidth/2;wrap.scrollTo({left:Math.max(0,center),behavior:'smooth'});}}
-search.oninput=render;statusSelect.onchange=render;monthSelect.onchange=e=>{currentMonth=e.target.value;render()};legend.onclick=e=>{const chip=e.target.closest('.chip');if(!chip)return;const c=chip.dataset.cat;activeCats.has(c)?activeCats.delete(c):activeCats.add(c);chip.classList.toggle('off');render()};document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentView=b.dataset.view;panelTitle.textContent=currentView==='timeline'?'통합 타임라인':'월간 캘린더';render()});todayBtn.onclick=()=>{currentMonth='2026-07';monthSelect.value=currentMonth;if(currentView==='calendar'){render();}else{render();setTimeout(scrollToToday,100);}toastMsg('오늘(2026-07-22)로 이동했습니다')};printBtn.onclick=()=>window.print();themeBtn.onclick=()=>{document.body.classList.toggle('light');themeBtn.textContent=document.body.classList.contains('light')?'☾ 어두운 화면':'☀︎ 밝은 화면'};closeModal.onclick=()=>modal.classList.remove('open');modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open')};document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});render();
+search.oninput=render;statusSelect.onchange=render;monthSelect.onchange=e=>{currentMonth=e.target.value;render()};legend.onclick=e=>{const chip=e.target.closest('.chip');if(!chip)return;const c=chip.dataset.cat;activeCats.has(c)?activeCats.delete(c):activeCats.add(c);chip.classList.toggle('off');render()};document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentView=b.dataset.view;panelTitle.textContent=currentView==='timeline'?'통합 타임라인':'월간 캘린더';render()});todayBtn.onclick=()=>{currentMonth='2026-07';monthSelect.value=currentMonth;if(currentView==='calendar'){render();}else{render();setTimeout(scrollToToday,100);}toastMsg('오늘(2026-07-22)로 이동했습니다')};printBtn.onclick=()=>window.print();themeBtn.onclick=()=>{document.body.classList.toggle('light');themeBtn.textContent=document.body.classList.contains('light')?'☾ 어두운 화면':'☀︎ 밝은 화면'};closeModal.onclick=()=>modal.classList.remove('open');modal.onclick=e=>{if(e.target===modal)modal.classList.remove('open')};document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('open')});
 </script>
 
 <div id="ip-block" style="position:fixed;inset:0;background:#07111f;z-index:9999;display:flex;align-items:center;justify-content:center">
