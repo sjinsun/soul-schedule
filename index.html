@@ -312,12 +312,21 @@ window.addEventListener('DOMContentLoaded',()=>{
     .then(buf=>{
       const wb=XLSX.read(buf,{type:'array',cellDates:true});
       const parsed=parseXlsxToEvents(wb);
-      if(parsed){events.length=0;parsed.forEach(ev=>events.push(ev));render();toastMsg(`✅ 최신 엑셀 자동 로드 — ${parsed.length}개`);}
+      if(parsed){
+        events.length=0;
+        parsed.forEach(ev=>events.push(ev));
+        // activeCats 재초기화 (새 카테고리 포함)
+        parsed.forEach(ev=>activeCats.add(ev.cat));
+        // 범례 재생성
+        legend.innerHTML=Object.entries(catMap).map(([k,v])=>`<div class="chip" data-cat="${k}"><span class="dot" style="background:${v.color}"></span>${k}</div>`).join('');
+        render();
+        toastMsg(`✅ 최신 엑셀 자동 로드 — ${parsed.length}개`);
+      }
     })
     .catch(()=>{ /* 파일 없으면 하드코딩 fallback — 이미 render됨 */ });
 });
 const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
-const activeCats=new Set(Object.keys(catMap));
+const activeCats=new Set([...Object.keys(catMap),...events.map(e=>e.cat)]);
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 // footer 기준일을 오늘 날짜로 표시
