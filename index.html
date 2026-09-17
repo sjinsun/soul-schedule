@@ -67,7 +67,7 @@ body.light .toast{background:#fff;color:var(--text)}
 <div class="app">
   <section class="hero">
     <div><div class="eyebrow">SOUL RESTAURANT · LIVE OPS</div><h1>영혼식당 운영 스케줄</h1><div class="subtitle">패키지, 이벤트, 시즌 패스를 하나의 타임라인으로 정리했습니다. 검색·필터·월 이동을 지원하며 데이터 이상 항목은 자동 표시됩니다.</div></div>
-    <div class="hero-actions"><button class="btn" id="themeBtn">☾ 어두운 화면</button><button class="btn" id="printBtn">인쇄 / PDF</button><button class="btn primary" id="todayBtn">오늘로 이동</button></div>
+    <div class="hero-actions"><button class="btn" id="themeBtn">☾ 어두운 화면</button><button class="btn" id="printBtn">인쇄 / PDF</button><label class="btn" id="uploadBtn" style="cursor:pointer">📂 엑셀 업로드<input type="file" id="xlsxInput" accept=".xlsx,.xls" style="display:none"></label><button class="btn primary" id="todayBtn">오늘로 이동</button></div>
   </section>
   <section class="stats" id="stats"></section>
   <section class="toolbar" style="grid-template-columns:1.3fr auto auto auto">
@@ -280,7 +280,38 @@ const events = [
   {name:'특별 보상!11',cat:'특별 보상',start:'2026-10-03',end:'2026-10-03'},
   {name:'특별 보상!12',cat:'특별 보상',start:'2026-10-04',end:'2026-10-04'},
 ];
-const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
+
+// 엑셀 파싱 공통 함수
+function parseXlsxToEvents(wb){
+  const ws=wb.Sheets['data']; if(!ws) return null;
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+  const soloMap={'firefly_garden':'반딧불','firefly_garden_02':'반딧불2','firefly_garden_03':'반딧불3','firefly_garden_04':'반딧불4','firefly_garden_05':'반딧불5','dessert_party':'디저트 파티','dessert_party_02':'디저트 파티2','dessert_party_03':'디저트 파티3','dessert_party_04':'디저트 파티4','dessert_party_05':'디저트 파티5','memory_treasure':'추억의 물건','memory_treasure_02':'추억의 물건2','memory_treasure_03':'추억의 물건3','memory_treasure_04':'추억의 물건4','memory_treasure_05':'추억의 물건5','yokai_parade':'요괴 대행진','yokai_parade_02':'요괴 대행진2','yokai_parade_03':'요괴 대행진3','yokai_parade_04':'요괴 대행진4'};
+  function fmtDate(val){if(!val)return '';if(val instanceof Date){const y=val.getFullYear(),m=String(val.getMonth()+1).padStart(2,'0'),d=String(val.getDate()).padStart(2,'0');return `${y}-${m}-${d}`;}const s=String(val);if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);if(/^\d+(\.\d+)?$/.test(s)){const d=new Date(Math.round((parseFloat(s)-25569)*86400*1000));return d.toISOString().slice(0,10);}return s.slice(0,10);}
+  const parsed=[];let skipMini=false;
+  for(const row of rows){
+    if(row[17]&&String(row[17]).includes('사용안함'))skipMini=true;
+    if(row[1]&&!['기타','시작','종료'].includes(String(row[1]))){const s=fmtDate(row[2]),e=fmtDate(row[3]);if(s)parsed.push({name:String(row[1]),cat:'기타',start:s,end:e});}
+    if(row[2]&&['원 플러스 원','메가 에너지','도우미 팩','에너지 부스트'].includes(String(row[2]))){const s=fmtDate(row[3]),e=fmtDate(row[4]);const rep=String(row[2])==='메가 에너지'?' (2일 간격)':String(row[2])==='도우미 팩'?' (3일 간격)':String(row[2])==='에너지 부스트'?' (5일 간격)':'';if(s)parsed.push({name:String(row[2])+rep,cat:'기타',start:s,end:e});}
+    if(row[5]&&!['패키지','시작','종료','추가내용','주단위 구매'].includes(String(row[5]))){const s=fmtDate(row[6]),e=fmtDate(row[7]);if(s){const n=String(row[5]);if(n.includes('등나무'))parsed.push({name:n,cat:'이벤트 패키지',start:s,end:e});else parsed.push({name:n,cat:'패키지',start:s,end:e});}}
+    if(row[9]&&!['솔로 이벤트','접속 이벤트','시작','종료'].includes(String(row[9]))&&!String(row[9]).includes('깜짝')){const name=soloMap[String(row[9])]||String(row[9]);const s=fmtDate(row[10]),e=fmtDate(row[11]);if(s)parsed.push({name,cat:'솔로 이벤트',start:s,end:e});}
+    if(row[9]&&String(row[9]).includes('깜짝')){const s=fmtDate(row[10]),e=fmtDate(row[11]);if(s)parsed.push({name:String(row[9]),cat:'접속 이벤트',start:s,end:e});}
+    if(row[13]&&!['시즌 패스','시작','종료','경쟁 이벤트','접속 이벤트2'].includes(String(row[13]))){const s=fmtDate(row[14]),e=fmtDate(row[15]);if(s){const n=String(row[13]);if(n.includes('한밤')||n.includes('연날리기'))parsed.push({name:n,cat:'경쟁 이벤트',start:s,end:e});else if(n.includes('특별 보상'))parsed.push({name:n,cat:'특별 보상',start:s,end:e});else parsed.push({name:n,cat:'시즌 패스',start:s,end:e});}}
+    if(!skipMini&&row[17]&&!['미니 게임','시작','종료'].includes(String(row[17]))){const s=fmtDate(row[18]),e=fmtDate(row[19]);if(s)parsed.push({name:String(row[17]),cat:'미니 게임',start:s,end:e});}
+  }
+  return parsed.length?parsed:null;
+}
+
+// 페이지 로드 시 같은 저장소 엑셀 자동 fetch
+window.addEventListener('DOMContentLoaded',()=>{
+  fetch('./이벤트_스캐쥴.xlsx')
+    .then(r=>{if(!r.ok)throw new Error('없음');return r.arrayBuffer();})
+    .then(buf=>{
+      const wb=XLSX.read(buf,{type:'array',cellDates:true});
+      const parsed=parseXlsxToEvents(wb);
+      if(parsed){events.length=0;parsed.forEach(ev=>events.push(ev));render();toastMsg(`✅ 최신 엑셀 자동 로드 — ${parsed.length}개`);}
+    })
+    .catch(()=>{/* 파일 없으면 하드코딩 fallback */});
+});{'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
 const activeCats=new Set(Object.keys(catMap));
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -434,30 +465,67 @@ search.oninput=render;statusSelect.onchange=render;monthSelect.onchange=e=>{curr
     });
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 // 드래그 스크롤
 (function(){
   function addDragScroll(el){
     if(!el) return;
     let isDown=false, startX, scrollLeft;
-    el.addEventListener('mousedown',e=>{
-      isDown=true; el.classList.add('dragging');
-      startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft;
-    });
+    el.addEventListener('mousedown',e=>{ isDown=true; el.classList.add('dragging'); startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; });
     el.addEventListener('mouseleave',()=>{ isDown=false; el.classList.remove('dragging'); });
     el.addEventListener('mouseup',()=>{ isDown=false; el.classList.remove('dragging'); });
-    el.addEventListener('mousemove',e=>{
-      if(!isDown) return; e.preventDefault();
-      const x=e.pageX-el.offsetLeft;
-      el.scrollLeft=scrollLeft-(x-startX)*1.2;
-    });
+    el.addEventListener('mousemove',e=>{ if(!isDown) return; e.preventDefault(); el.scrollLeft=scrollLeft-(e.pageX-el.offsetLeft-startX)*1.2; });
   }
-  // 타임라인 스크롤 영역 감지 (렌더 후)
-  const observer=new MutationObserver(()=>{
-    const wrap=document.querySelector('.timeline-wrap');
-    if(wrap && !wrap.dataset.drag){ wrap.dataset.drag='1'; addDragScroll(wrap); }
+  const obs=new MutationObserver(()=>{ const w=document.querySelector('.timeline-wrap'); if(w&&!w.dataset.drag){w.dataset.drag='1';addDragScroll(w);} });
+  obs.observe(document.body,{childList:true,subtree:true});
+})();
+(function(){
+  const input = document.getElementById('xlsxInput');
+  if(!input) return;
+
+  input.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const wb = XLSX.read(ev.target.result, {type:'array', cellDates:true});
+        const parsed = parseXlsxToEvents(wb);
+        if(!parsed){ alert('data 시트를 찾을 수 없거나 이벤트가 없습니다.'); return; }
+        events.length=0; parsed.forEach(ev=>events.push(ev)); render();
+        toastMsg(`✅ 업로드 완료 — ${parsed.length}개 이벤트 반영`);
+      } catch(err){ alert('파싱 오류: '+err.message); }
+
+        function fmtDate(val){
+          if(!val) return '';
+          if(val instanceof Date){
+            const y=val.getFullYear(), m=String(val.getMonth()+1).padStart(2,'0'), d=String(val.getDate()).padStart(2,'0');
+            return `${y}-${m}-${d}`;
+          }
+          const s=String(val);
+          if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+          // 엑셀 시리얼
+          if(/^\d+$/.test(s)){
+            const d=new Date(Math.round((parseInt(s)-25569)*86400*1000));
+            return d.toISOString().slice(0,10);
+          }
+          return s.slice(0,10);
+        }
+
+        const wb2 = XLSX.read(ev.target.result, {type:'array', cellDates:true});
+        const parsed2 = parseXlsxToEvents(wb2);
+        if(!parsed2){ alert('data 시트를 찾을 수 없거나 이벤트가 없습니다.'); return; }
+        events.length=0; parsed2.forEach(ev=>events.push(ev)); render();
+        toastMsg(`✅ 업로드 완료 — ${parsed2.length}개 이벤트 반영`);
+        document.getElementById('uploadBtn').firstChild.textContent = `📂 ${file.name}`;
+      } catch(err){
+        alert('파싱 오류: ' + err.message);
+      }
+      input.value = '';
+    };
+    reader.readAsArrayBuffer(file);
   });
-  observer.observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 
