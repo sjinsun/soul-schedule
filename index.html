@@ -96,6 +96,7 @@ const events = [
   {name:'원 플러스 원',cat:'기타',start:'2026-08-12',end:'2099-08-12'},
   {name:'메가 에너지 (2일 간격)',cat:'기타',start:'2026-08-12',end:'2099-08-12'},
   {name:'도우미 팩 (3일 간격)',cat:'기타',start:'2026-08-12',end:'2099-08-12'},
+  {name:'에너지 부스트 (5일 간격)',cat:'기타',start:'2026-09-17',end:'2099-08-12'},
   // 패키지
   {name:'행운 꾸러미',cat:'패키지',start:'2026-07-22',end:'2026-07-28'},
   {name:'모여봐요',cat:'패키지',start:'2026-07-28',end:'2026-07-30'},
@@ -157,7 +158,9 @@ const events = [
   // 이벤트 패키지 (등나무)
   {name:'등나무 꾸러미1',cat:'이벤트 패키지',start:'2026-09-14',end:'2026-09-18'},
   {name:'등나무 꾸러미2',cat:'이벤트 패키지',start:'2026-09-22',end:'2026-09-24'},
+  {name:'등나무 선물1',cat:'이벤트 패키지',start:'2026-09-28',end:'2026-09-29'},
   {name:'등나무 꾸러미3',cat:'이벤트 패키지',start:'2026-09-30',end:'2026-10-02'},
+  {name:'등나무 선물2',cat:'이벤트 패키지',start:'2026-10-06',end:'2026-10-08'},
   // 솔로 이벤트
   {name:'달빛 보물 축제',cat:'솔로 이벤트',start:'2026-07-22',end:'2026-07-31'},
   {name:'달빛 보물 축제2',cat:'솔로 이벤트',start:'2026-08-01',end:'2026-08-04'},
@@ -277,7 +280,7 @@ const events = [
   {name:'특별 보상!11',cat:'특별 보상',start:'2026-10-03',end:'2026-10-03'},
   {name:'특별 보상!12',cat:'특별 보상',start:'2026-10-04',end:'2026-10-04'},
 ];
-const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
+const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
 const activeCats=new Set(Object.keys(catMap));
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
