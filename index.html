@@ -79,7 +79,7 @@ body.light .toast{background:#fff;color:var(--text)}
   <div class="legend" id="legend"></div>
   <section class="panel">
     <div class="panel-head"><h2 id="panelTitle">통합 타임라인</h2><div class="range-label" id="rangeLabel"></div></div>
-    <div class="timeline-wrap"><div class="timeline" id="timeline"></div></div>
+    <div class="timeline-wrap" id="timelineWrap"><div class="timeline" id="timeline"></div></div>
     <div class="calendar" id="calendar"></div>
   </section>
   <div class="footer" id="footerRef">기준일: · 원본: 이벤트 스캐쥴.xlsx</div>
@@ -333,7 +333,7 @@ const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${Str
 (()=>{ const el=document.getElementById('footerRef'); if(el) el.textContent=`기준일: ${fmt(TODAY)} · 원본: 이벤트 스캐쥴.xlsx`; })();
 
 // GitHub 마지막 업로드 시간 표시
-fetch('https://api.github.com/repos/sjinsun/soul-schedule/commits?path=이벤트_스캐쥴.xlsx&per_page=1')
+fetch('https://api.github.com/repos/sjinsun/soul-schedule/commits?path=%EC%9D%B4%EB%B2%A4%ED%8A%B8_%EC%8A%A4%EC%BA%90%EC%A5%B4.xlsx&per_page=1')
   .then(r=>r.json())
   .then(data=>{
     if(data&&data[0]){
@@ -456,7 +456,24 @@ function renderCalendar(){
   html+='</div>';
   calendar.innerHTML=html;timeline.style.display='none';calendar.style.display='block';rangeLabel.textContent=`${first.getFullYear()}년 ${first.getMonth()+1}월 · 연속 일정 표시`;bindEvents();
 }
-function render(){renderStats();currentView==='timeline'?renderTimeline():renderCalendar();if(currentView==='timeline'){setTimeout(scrollToToday,50);}}
+function render(){
+  renderStats();
+  currentView==='timeline'?renderTimeline():renderCalendar();
+  if(currentView==='timeline'){
+    setTimeout(scrollToToday,50);
+    setTimeout(()=>{
+      const wrap=document.getElementById('timelineWrap');
+      if(wrap&&!wrap._drag){
+        wrap._drag=true;
+        let isDown=false,startX,scrollLeft;
+        wrap.addEventListener('mousedown',e=>{isDown=true;wrap.classList.add('dragging');startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;});
+        wrap.addEventListener('mouseleave',()=>{isDown=false;wrap.classList.remove('dragging');});
+        wrap.addEventListener('mouseup',()=>{isDown=false;wrap.classList.remove('dragging');});
+        wrap.addEventListener('mousemove',e=>{if(!isDown)return;e.preventDefault();wrap.scrollLeft=scrollLeft-(e.pageX-wrap.offsetLeft-startX)*1.2;});
+      }
+    },100);
+  }
+}
 function bindEvents(){document.querySelectorAll('[data-name]').forEach(el=>el.onclick=()=>openModal(events.find(e=>e.name===el.dataset.name)))}
 function openModal(e){const st=status(e),labels={live:'진행 중',upcoming:'예정',ended:'종료',invalid:'데이터 확인'};modalContent.innerHTML=`<div class="eyebrow">${e.cat}</div><h3>${e.name}</h3><span class="chip"><span class="dot" style="background:${catMap[e.cat].color}"></span>${labels[st]}</span><dl class="meta"><dt>시작일</dt><dd>${e.start}</dd><dt>종료일</dt><dd>${e.end==='2099-07-28'?'상시 운영 (원본 2099-07-28)':e.end}</dd><dt>기간</dt><dd>${st==='invalid'?'확인 필요':e.end==='2099-07-28'?'상시':Math.max(1,diff(e.start,e.end)+1)+'일'}</dd>${e.cat==='접속 이벤트'?'<dt>오픈 시각</dt><dd>13시부터 시작</dd>':''}</dl>${e.cat==='접속 이벤트'?'<div class="warning" style="border-color:rgba(125,211,252,.45);background:rgba(125,211,252,.08);color:#bfe3ff;">⏰ 접속 이벤트는 당일 <b>13시부터</b> 시작합니다.</div>':''}${st==='invalid'?'<div class="warning">종료일이 시작일보다 빠릅니다. 엑셀 원본의 날짜를 확인해 주세요.</div>':''}`;modal.classList.add('open')}
 function toastMsg(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1700)}
@@ -495,26 +512,7 @@ search.oninput=render;statusSelect.onchange=render;monthSelect.onchange=e=>{curr
 </script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
-// 드래그 스크롤
-(function(){
-  function addDragScroll(el){
-    if(!el) return;
-    let isDown=false, startX, scrollLeft;
-    el.addEventListener('mousedown',e=>{
-      isDown=true; el.classList.add('dragging');
-      startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft;
-    });
-    el.addEventListener('mouseleave',()=>{ isDown=false; el.classList.remove('dragging'); });
-    el.addEventListener('mouseup',()=>{ isDown=false; el.classList.remove('dragging'); });
-    el.addEventListener('mousemove',e=>{
-      if(!isDown) return; e.preventDefault();
-      const x=e.pageX-el.offsetLeft;
-      el.scrollLeft=scrollLeft-(x-startX)*1.2;
-    });
-  }
-  const obs=new MutationObserver(()=>{ const w=document.querySelector('.timeline-wrap'); if(w&&!w.dataset.drag){w.dataset.drag='1';addDragScroll(w);} });
-  obs.observe(document.body,{childList:true,subtree:true});
-})();
+
 (function(){
   const input = document.getElementById('xlsxInput');
   if(!input) return;
