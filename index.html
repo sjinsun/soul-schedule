@@ -214,7 +214,7 @@ function renderTimeline(){
         const offset=Math.max(0,Math.round((clampedStart-start)/86400000));
         // 시작일과 종료일을 모두 포함: 7/22~7/28은 7일 칸 전체를 사용한다.
         const span=Math.max(1,Math.round((clampedEnd-clampedStart)/86400000)+1);
-        html+=`<div class="bar ${catMap[e.cat].cls} ${invalid?'invalid':''} ${status(e)==='live'?'live':''}" style="--start:${offset};--span:${span}" data-name="${e.name}" title="${e.name} · ${e.start} ~ ${e.end}"><span class="bar-label">${e.name}</span></div>`;
+        html+=`<div class="bar ${catMap[e.cat].cls} ${invalid?'invalid':''} ${status(e)==='live'?'live':''} ${e.ab_test?'abtest':''}" style="--start:${offset};--span:${span}" data-name="${e.name}" title="${e.name} · ${e.start} ~ ${e.end}${e.ab_test?' ⭐ AB테스트 중':''}">${e.ab_test?'⭐ ':''}<span class="bar-label">${e.name}</span></div>`;
       });
       html+='</div>';
     });
@@ -253,7 +253,7 @@ function renderCalendar(){
     }
     segments.forEach(seg=>{
       const cls=catMap[seg.e.cat].cls;
-      html+=`<div class="cal-event-span ${cls} ${seg.contBefore?'cont-before':''} ${seg.contAfter?'cont-after':''} ${status(seg.e)==='live'?'live':''}" style="--col:${seg.startCol};--span:${seg.span};--lane:${seg.lane};background:${catMap[seg.e.cat].color}" data-name="${seg.e.name}" title="${seg.e.name} · ${seg.e.start} ~ ${seg.e.end}">${seg.e.name}</div>`;
+      html+=`<div class="cal-event-span ${cls} ${seg.contBefore?'cont-before':''} ${seg.contAfter?'cont-after':''} ${status(seg.e)==='live'?'live':''} ${seg.e.ab_test?'abtest':''}" style="--col:${seg.startCol};--span:${seg.span};--lane:${seg.lane};background:${catMap[seg.e.cat].color}" data-name="${seg.e.name}" title="${seg.e.name} · ${seg.e.start} ~ ${seg.e.end}${seg.e.ab_test?' ⭐ AB테스트 중':''}">${seg.e.ab_test?'⭐ ':''} ${seg.e.name}</div>`;
     });
     html+='</div>';
   }
