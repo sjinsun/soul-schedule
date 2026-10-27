@@ -11,7 +11,7 @@
 :root{
   --bg:#07111f;--panel:#0c1828;--panel2:#111f33;--text:#eaf2ff;--muted:#8fa3bd;
   --line:rgba(255,255,255,.09);--accent:#72e3c0;--danger:#ff6b81;--today:#ffd166;
-  --pkg:#9f7aea;--pkg2:#7c3aed;--pkg3:#c084fc;--pkg3c:#e879f9;--solo:#34d399;--pass:#f59e0b;--subpass:#2dd4bf;--login:#38bdf8;--login3:#f97316;--mini:#0ea5e9;--concert:#6b7280;
+  --pkg:#9f7aea;--pkg2:#7c3aed;--pkg3:#c084fc;--pkg3c:#e879f9;--solo:#34d399;--pass:#f59e0b;--subpass:#2dd4bf;--login:#38bdf8;--mini:#0ea5e9;--concert:#6b7280;
   --shadow:0 22px 70px rgba(0,0,0,.32);--radius:18px;
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Pretendard,"Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% -10%,#14325a 0,transparent 35%),radial-gradient(circle at 90% 10%,#153d35 0,transparent 28%),var(--bg);color:var(--text);min-height:100vh}
@@ -128,7 +128,7 @@ window.addEventListener('DOMContentLoaded',()=>{
     })
     .catch(()=>{ /* fallback: 하드코딩 데이터 사용 */ });
 });
-const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'패키지3':{cls:'pkg3c',color:'var(--pkg3c)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'서브 패스':{cls:'subpass',color:'var(--subpass)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트3':{cls:'login3',color:'var(--login3)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
+const catMap={'패키지':{cls:'pkg',color:'var(--pkg)'},'패키지2':{cls:'pkg2',color:'var(--pkg2)'},'이벤트 패키지':{cls:'pkg3',color:'var(--pkg3)'},'패키지3':{cls:'pkg3c',color:'var(--pkg3c)'},'미니 게임':{cls:'mini',color:'var(--mini)'},'솔로 이벤트':{cls:'solo',color:'var(--solo)'},'경쟁 이벤트':{cls:'concert',color:'var(--concert)'},'서브 패스':{cls:'subpass',color:'var(--subpass)'},'시즌 패스':{cls:'pass',color:'var(--pass)'},'접속 이벤트':{cls:'login',color:'var(--login)'},'기타 보상':{cls:'etcreward',color:'var(--etcreward)'},'특별 보상':{cls:'special',color:'var(--special)'},'기타':{cls:'etc',color:'var(--etc)'}};
 const activeCats=new Set([...Object.keys(catMap),...events.map(e=>e.cat)]);
 const parse=s=>new Date(s+'T00:00:00');
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -214,7 +214,7 @@ function renderTimeline(){
         const offset=Math.max(0,Math.round((clampedStart-start)/86400000));
         // 시작일과 종료일을 모두 포함: 7/22~7/28은 7일 칸 전체를 사용한다.
         const span=Math.max(1,Math.round((clampedEnd-clampedStart)/86400000)+1);
-        html+=`<div class="bar ${catMap[e.cat].cls} ${invalid?'invalid':''} ${status(e)==='live'?'live':''} ${e.ab_test?'abtest':''}" style="--start:${offset};--span:${span}" data-name="${e.name}" title="${e.name} · ${e.start} ~ ${e.end}${e.ab_test?' ⭐ AB테스트 중':''}">${e.ab_test?'⭐ ':''}<span class="bar-label">${e.name}</span></div>`;
+        html+=`<div class="bar ${catMap[e.cat].cls} ${invalid?'invalid':''} ${status(e)==='live'?'live':''} ${e.ab_test?'abtest':''} ${e.cat==='미니 게임'&&e.name&&e.name.includes('할로윈')?'halloween':''}" style="--start:${offset};--span:${span}" data-name="${e.name}" title="${e.name} · ${e.start} ~ ${e.end}${e.ab_test?' ⭐ AB테스트 중':''}">${e.ab_test?'⭐ ':''}<span class="bar-label">${e.name}</span></div>`;
       });
       html+='</div>';
     });
@@ -253,7 +253,7 @@ function renderCalendar(){
     }
     segments.forEach(seg=>{
       const cls=catMap[seg.e.cat].cls;
-      html+=`<div class="cal-event-span ${cls} ${seg.contBefore?'cont-before':''} ${seg.contAfter?'cont-after':''} ${status(seg.e)==='live'?'live':''} ${seg.e.ab_test?'abtest':''}" style="--col:${seg.startCol};--span:${seg.span};--lane:${seg.lane};background:${catMap[seg.e.cat].color}" data-name="${seg.e.name}" title="${seg.e.name} · ${seg.e.start} ~ ${seg.e.end}${seg.e.ab_test?' ⭐ AB테스트 중':''}">${seg.e.ab_test?'⭐ ':''} ${seg.e.name}</div>`;
+      html+=`<div class="cal-event-span ${cls} ${seg.contBefore?'cont-before':''} ${seg.contAfter?'cont-after':''} ${status(seg.e)==='live'?'live':''} ${seg.e.ab_test?'abtest':''} ${seg.e.cat==='미니 게임'&&seg.e.name&&seg.e.name.includes('할로윈')?'halloween':''}" style="--col:${seg.startCol};--span:${seg.span};--lane:${seg.lane};background:${seg.e.cat==='미니 게임'&&seg.e.name&&seg.e.name.includes('할로윈')?'var(--etcreward)':catMap[seg.e.cat].color}" data-name="${seg.e.name}" title="${seg.e.name} · ${seg.e.start} ~ ${seg.e.end}${seg.e.ab_test?' ⭐ AB테스트 중':''}">${seg.e.ab_test?'⭐ ':''} ${seg.e.name}</div>`;
     });
     html+='</div>';
   }
